@@ -19,7 +19,7 @@ exports.buscador = function(req, res) {
 };
 exports.index = function(req, res, next) {
 	if (req.query.search !== ""){
-		var consulta = req.query.search.replace(" ","%");
+		var consulta = (req.query.search || '').replace(" ","%");
 		models.Quiz.findAll({where:["upper(pregunta) like upper (?)","%"+consulta+"%"]}
 	).then(function(quizes){
 	res.render('quizes/index.ejs',{quizes:quizes,errors:[]});
