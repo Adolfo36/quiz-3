@@ -13,11 +13,21 @@ exports.load = function(req, res, next, quizId) {
 };
 
 // GET /quizes
-exports.index = function(req, res) {
-	models.Quiz.findAll().then(function(quizes){
-		res.render('quizes/index.ejs', {quizes: quizes});
-	}
+exports.buscador = function(req, res) {
+	res.render('quizes/buscador', { busqueda: "pregunta a buscar o deje en blanco para todas"}
 	).catch(function(error){next(error);})
+};
+exports.index = function(req, res, next) {
+	if (req.query.search !== ""){
+		var consulta = req.query.search.replace(" ","%");
+		models.Quiz.findAll({where:["upper(pregunta) like upper (?)","%"+consulta+"%"]}
+	).then(function(quizes){
+	res.render('quizes/index.ejs',{quizes:quizes,errors:[]});
+	}).catch(function(error){next(error);})
+	}else 
+		{models.Quiz.findAll().then(function(quizes){
+			res.render('quizes/index.ejs', {quizes: quizes}
+	).catch(function(error){next(error);});});}
 };
 
 // GRT /quizes/ :id
@@ -33,4 +43,8 @@ exports.answer = function(req, res){
 	}
 		res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
 };
+// GET /quizes/autor
+exports.creditos = function(req, res){
+	res.render('author/creditos', {autor: 'Adolfo Cortell'});		
+	};
 

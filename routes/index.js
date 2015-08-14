@@ -11,8 +11,12 @@ router.get('/', function(req, res) {
 // Autoload de comandos con :quizId
 router.param('quizId',quizController.load);  // autoload :quizId
 // Definición de las rutas de /quizes
+
 router.get('/quizes', quizController.index);
+router.get('/quizes/b/', quizController.buscador);
 router.get('/quizes/:quizId(\\d+)', quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
+router.get('/quizes?search=texto_a_buscar', quizController.answer);
+router.get('/creditos/', quizController.creditos);
 
 module.exports = router;
