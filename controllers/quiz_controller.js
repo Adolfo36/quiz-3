@@ -24,7 +24,7 @@ exports.index = function(req, res, next) {
 	).then(function(quizes){
 	res.render('quizes/index.ejs',{quizes:quizes,errors:[]});
 	}).catch(function(error){next(error);})
-	}else 
+	}else
 		{models.Quiz.findAll().then(function(quizes){
 			res.render('quizes/index.ejs', {quizes: quizes}
 	).catch(function(error){next(error);});});}
@@ -47,4 +47,19 @@ exports.answer = function(req, res){
 exports.creditos = function(req, res){
 	res.render('author/creditos', {autor: 'Adolfo Cortell'});		
 	};
-
+// GET /quizes/new
+exports.new = function(req, res){
+	var quiz = models.Quiz.build(	// crea objeto quiz
+		{pregunta: "Pregunta", respuesta: "Respuesta"}
+		);
+		res.render('quizes/new', {quiz: quiz});
+	};
+// POST /quizes/new
+exports.create = function(req, res){
+	var quiz = models.Quiz.build( req.body.quiz );	// crea objeto quiz
+	// guarda en DB los campos pregunta y respuesta de quiz
+		quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+			res.redirect('/quizes');
+		})		// Redirección HTTP (URL relativo) lista de preguntas
+	};
+	
