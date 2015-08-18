@@ -20,9 +20,9 @@ exports.buscador = function(req, res) {
 exports.index = function(req, res, next) {
 	if (req.query.search !== ""){
 		var consulta = (req.query.search || '').replace(" ","%");
-		models.Quiz.findAll({where:["upper(pregunta) like upper (?)","%"+consulta+"%"]}
+		models.Quiz.findAll({where:["upper(pregunta) like upper (?)","%"+consulta+"%"], order: 'pregunta'}
 	).then(function(quizes){
-	res.render('quizes/index.ejs',{quizes:quizes, errors:[]});
+	res.render('quizes/index.ejs',{quizes: quizes, errors:[]});
 	}).catch(function(error){next(error);})
 	}else
 		{models.Quiz.findAll().then(function(quizes){
@@ -54,6 +54,11 @@ exports.new = function(req, res){
 		);
 		res.render('quizes/new', {quiz: quiz, errors: []});
 	};
+// GET /quizes/:id/edit
+exports.edit = function(req, res){
+	var quiz = req.quiz; // autoload de la instancia quiz
+		res.render('quizes/edit', {quiz: quiz, errors: []});
+	};
 // POST /quizes/new
 exports.create = function(req, res){
 	var quiz = models.Quiz.build( req.body.quiz );	// crea objeto quiz
@@ -68,6 +73,25 @@ exports.create = function(req, res){
 				quiz 	// save: guarda en DB campos pregunta y respuesta de quiz
 				.save({fields: ["pregunta", "respuesta"]})
 				.then(function(){res.redirect('/quizes')})
+			}	// res.redirect: Redirección HTTP a lista de preguntas
+		}
+	);
+};
+// POST /quizes/:id
+exports.update = function(req, res){
+	req.quiz.pregunta = req.body.quiz.pregunta;
+	req.quiz.respuesta = req.body.quiz.respuesta;
+
+	req.quiz
+	.validate()
+	.then(
+		function (err){
+			if (err) {
+				res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
+			}else {
+				req.quiz 	// save: guarda en DB campos pregunta y respuesta de quiz
+				.save({fields: ["pregunta", "respuesta"]})
+				.then(function(){res.redirect('/quizes');});
 			}	// res.redirect: Redirección HTTP a lista de preguntas
 		}
 	);
