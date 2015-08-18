@@ -22,11 +22,11 @@ exports.index = function(req, res, next) {
 		var consulta = (req.query.search || '').replace(" ","%");
 		models.Quiz.findAll({where:["upper(pregunta) like upper (?)","%"+consulta+"%"], order: 'pregunta'}
 	).then(function(quizes){
-	res.render('quizes/index.ejs',{quizes: quizes, errors:[]});
+			res.render('quizes/index.ejs',{quizes: quizes, errors:[]});
 	}).catch(function(error){next(error);})
 	}else
 		{models.Quiz.findAll().then(function(quizes){
-			res.render('quizes/index.ejs', {quizes: quizes, errors: []}
+			res.render('quizes/index.ejs',{quizes: quizes, errors: []}
 	).catch(function(error){next(error);});});}
 };
 
@@ -58,6 +58,13 @@ exports.new = function(req, res){
 exports.edit = function(req, res){
 	var quiz = req.quiz; // autoload de la instancia quiz
 		res.render('quizes/edit', {quiz: quiz, errors: []});
+	};
+// DELETE /quizes/:id
+exports.destroy = function(req, res){
+	console.log("estoy en destroy");
+	req.quiz.destroy().then( function() {
+		res.redirect('/quizes');
+	}).catch(function(error){next(error)});
 	};
 // POST /quizes/new
 exports.create = function(req, res){
