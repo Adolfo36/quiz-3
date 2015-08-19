@@ -2,8 +2,10 @@ var models = require('../models/models.js');
 
 // Autoload - factoriza el código si ruta incluye :quizID
 exports.load = function(req, res, next, quizId) {
-	models.Quiz.find(quizId).then(
-		function(quiz) {
+	models.Quiz.find({
+				where: {id: Number(quizId)},
+				include: [{model: models.Comment}]
+			}).then(function(quiz) {
 			if (quiz) { 
 			req.quiz = quiz;
 			next();
@@ -18,8 +20,8 @@ exports.buscador = function(req, res) {
 	).catch(function(error){next(error);})
 };
 exports.index = function(req, res, next) {
-	console.log(req.query.search);
-	console.log(req.query.search2);
+	//console.log(req.query.search);
+	//console.log(req.query.search2);
 	if (req.query.search2 !== ""){
 		var consulta = (req.query.search2 || '').replace(" ","%");
 		models.Quiz.findAll({where:["upper(tema) like upper (?)","%"+consulta+"%"], order: 'tema'}
