@@ -3,7 +3,7 @@
 		<tr>
 			<td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].tema %></a></td>
 			<td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
-			<%if(session.user){%>	// para ocultar los botones de creación, actualización y borrado
+			<%if(session.user){%>	
 			<td><a href="quizes/<%= quizes[i].id %>/edit"<button>editar</button></a></td>
 
 			<td>
@@ -17,7 +17,7 @@
 	<% } %>
 </table>
 <p/>
-<%if(session.user){%>	// para ocultar los botones de creación, actualización y borrado
+<%if(session.user){%>	
 <A HREF="/quizes/new"><button type="button">Crear pregunta</button></a><br>
 <%}%>
 <A HREF="/quizes/b"><button type="button">Buscar una pregunta</button></a><br>

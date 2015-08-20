@@ -42,6 +42,7 @@ exports.index = function(req, res, next) {
 
 // GRT /quizes/ :id
 exports.show = function(req, res) {
+//console.log("Control de paso *********************************");	
 	res.render('quizes/show', {quiz: req.quiz, errors: []});	
 };
 
