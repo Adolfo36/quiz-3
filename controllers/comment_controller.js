@@ -2,6 +2,7 @@ var models = require('../models/models.js');
 
 // Autoload :id de comentarios
 exports.load = function(req, res, next, commentId) {
+console.log("Control paso autoload comentario")
 	models.Comment.find({
 		where: {
 			id: Number(commentId)
@@ -24,6 +25,7 @@ exports.new = function(req, res){
 exports.create = function(req, res){
 	var comment = models.Comment.build(
 		{texto: req.body.comment.texto,
+		publicado: false,
 		QuizId: req.params.quizId });	// crea objeto comment
 
 	comment
@@ -43,6 +45,9 @@ exports.create = function(req, res){
 };
 // GET /quizes/ :quizId/comments/ :commentId/publish
 exports.publish = function(req, res) {
+console.log("Para comprobar");
+console.log(req.comment);
+
 	req.comment.publicado = true;
 
 	req.comment.save( {fields: ["publicado"]})
